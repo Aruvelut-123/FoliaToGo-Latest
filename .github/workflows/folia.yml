@@ -6,9 +6,9 @@ name: Build Folia
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "dev/1.21.1" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "dev/1.21.1" ]
+    branches: [ "master" ]
   schedule:
     - cron: '0 0 * * *'
 
