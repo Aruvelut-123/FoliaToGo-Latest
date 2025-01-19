@@ -48,6 +48,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: Folia/build/libs/*.jar
+          asset_path: Folia/build/libs/*
           asset_name: Folia-build.jar
           asset_content_type: application/zip
