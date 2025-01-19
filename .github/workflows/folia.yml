@@ -26,6 +26,8 @@ jobs:
       - name: 'Build Folia .jar'
         run: |
           echo '${{inputs.createrelease}}'
+          echo "${{inputs.createrelease == 'false'}}"
+          echo "${{inputs.createrelease == 'true'}}"
           # sh build.sh
       - uses: actions/upload-artifact@v4
         if: ${{inputs.createrelease == 'false'}}
