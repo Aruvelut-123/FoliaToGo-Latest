@@ -45,6 +45,8 @@ jobs:
       - #uses: actions/upload-release-asset@v1
         if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
         name: Upload Assets to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           RELEASE_ID=${{ steps.create_release.outputs.id }}
           UPLOAD_FOLDER="Folia/build/libs"
