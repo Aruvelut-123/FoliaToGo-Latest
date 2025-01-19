@@ -25,7 +25,8 @@ jobs:
           java-version: '21'
       - name: 'Build Folia .jar'
         run: |
-          sh build.sh
+          echo '${{inputs.createrelease}}'
+          # sh build.sh
       - uses: actions/upload-artifact@v4
         if: ${{inputs.createrelease == 'false'}}
         with:
