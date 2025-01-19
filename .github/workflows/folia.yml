@@ -19,6 +19,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Checkout another repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'PaperMC/Folia'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: another-repo
+      - name: Get Commit ID from the other repository
+        id: folia
+        run: |
+          cd another-repo
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "commit_id=$COMMIT_ID" >> $GITHUB_OUTPUT
+          echo "Commit ID: $COMMIT_ID"
       - uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
@@ -37,13 +50,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: folia-latest
+          tag_name: ${{ format('folia-latest-{}', steps.folia.outputs.commit_id) }}
           release_name: ${{inputs.release_name}}
-          body: This is latest folia build from the day this created!
+          body: This is latest folia build number ${{steps.folia.outputs.commit_id}}!
           draft: false
           prerelease: false
-      - #uses: actions/upload-release-asset@v1
-        if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
+      - if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
         name: Upload Assets to Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -53,8 +65,9 @@ jobs:
           EXT_FILTER="*.jar"
           find "$UPLOAD_FOLDER" -type f -name "$EXT_FILTER" | while read -r FILE; do
             echo "Uploading file: $FILE"
-            gh release upload folia-latest "$FILE" --clobber
+            gh release upload ${{ format('folia-latest-{}', steps.folia.outputs.commit_id) }} "$FILE" --clobber
           done
+        #uses: actions/upload-release-asset@v1
         #env:
           #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         #with:
