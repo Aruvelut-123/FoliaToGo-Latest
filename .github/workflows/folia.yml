@@ -25,17 +25,14 @@ jobs:
           java-version: '21'
       - name: 'Build Folia .jar'
         run: |
-          echo '${{inputs.createrelease}}'
-          echo "${{inputs.createrelease == 'false' || inputs.createrelease == false}}"
-          echo "${{inputs.createrelease == 'true' || inputs.createrelease == true}}"
-          # sh build.sh
+          sh build.sh
       - uses: actions/upload-artifact@v4
-        if: ${{inputs.createrelease == 'false'}}
+        if: ${{inputs.createrelease == 'false' || inputs.createrelease == false}}
         with:
           name: FoliaToGo
           path: Folia/build/libs/*.jar
       - uses: actions/create-release@v1.1.4
-        if: ${{inputs.createrelease == 'true'}}
+        if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
         id: create_release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,7 +43,7 @@ jobs:
           draft: false
           prerelease: false
       - uses: actions/upload-release-asset@v1
-        if: ${{inputs.createrelease == 'true'}}
+        if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
