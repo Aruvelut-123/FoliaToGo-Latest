@@ -6,7 +6,7 @@ on:
       createrelease:
         description: '创建发行版'
         required: true
-        default: false
+        default: 'false'
         type: boolean
       release_name:
         description: '发行版名称'
