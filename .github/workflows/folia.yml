@@ -42,12 +42,21 @@ jobs:
           body: This is latest folia build from the day this created!
           draft: false
           prerelease: false
-      - uses: actions/upload-release-asset@v1
+      - #uses: actions/upload-release-asset@v1
         if: ${{inputs.createrelease == 'true' || inputs.createrelease == true}}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{steps.create_release.outputs.upload_url}}
-          asset_path: Folia/build/libs/*
-          asset_name: Folia-build.jar
-          asset_content_type: application/zip
+        name: Upload Assets to Release
+        run: |
+          RELEASE_ID=${{ steps.create_release.outputs.id }}
+          UPLOAD_FOLDER="Folia/build/libs"
+          EXT_FILTER="*.jar"
+          find "$UPLOAD_FOLDER" -type f -name "$EXT_FILTER" | while read -r FILE; do
+            echo "Uploading file: $FILE"
+            gh release upload folia-latest "$FILE" --clobber
+          done
+        #env:
+          #GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #with:
+          #upload_url: ${{steps.create_release.outputs.upload_url}}
+          #asset_path: Folia/build/libs/*
+          #asset_name: Folia-build.jar
+          #asset_content_type: application/zip
